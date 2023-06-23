@@ -1,8 +1,16 @@
 import User from "../models/User";
 
 export const handleSignup = async (req, res) => {
-  const { id, password, name, nickname, email, phonenumber, address } =
-    req.body;
+  const {
+    id,
+    password,
+    year,
+    nickname,
+    name,
+    phonenumber,
+    universityCode,
+    major,
+  } = req.body;
   const exists = await User.findOne({ id });
   if (Boolean(exists)) {
     return res.status(400).json({ errorMessage: "ALREADY_TAKEN" });
@@ -11,11 +19,12 @@ export const handleSignup = async (req, res) => {
     await User.create({
       id,
       password,
+      year,
       nickname,
       name,
-      email,
       phonenumber,
-      address,
+      universityCode,
+      major,
     });
     return res.status(200).json({ Message: "SIGNUP_SUCCESS" });
   } catch (error) {
