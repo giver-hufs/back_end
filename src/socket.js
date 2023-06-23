@@ -23,11 +23,18 @@ function initializeSocket(server) {
     });
     socket.on("request post", async (data) => {
       try {
-        const { roomId, universityCode, contentName, hostName, phoneNumber } =
-          data;
+        const {
+          roomId,
+          universityCode,
+          contentName,
+          content,
+          hostName,
+          phoneNumber,
+        } = data;
         const newContent = new ContentLocational({
           roomId,
           universityCode,
+          content,
           contentName,
           hostName,
           phoneNumber,

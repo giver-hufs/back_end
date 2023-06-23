@@ -43,9 +43,30 @@ export const handleLogin = async (req, res) => {
     if (password !== user.password) {
       return res.status(400).json({ errorMessage: "PASSWORD_INCORRECT" });
     }
-    const name = user.name;
-    return res.status(200).json({ name: name });
+    return res.status(200).json(user);
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const editUserInfo = async (req, res) => {
+  const {
+    id,
+    password,
+    year,
+    nickname,
+    name,
+    phonenumber,
+    universityCode,
+    major,
+  } = req.body;
+  try {
+    await User.findOneAndUpdate(
+      { id },
+      { id, password, year, nickname, name, phonenumber, universityCode, major }
+    );
+    return res.status(200).json({ Message: "UPDATE_SUCCESS" });
+  } catch (err) {
+    return res.status(400).json({ errorMessage: "UPDATE_FAILED" });
   }
 };
