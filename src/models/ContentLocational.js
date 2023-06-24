@@ -9,8 +9,8 @@ const ContentLocationalSchema = mongoose.Schema({
   giverName: { type: String },
   phoneNumber: { type: String, required: true },
   createdTime: { type: Date, default: Date.now, required: true },
-  lat: { type: Number, require: true },
-  lon: { type: Number, required: true },
+  lat: { type: Number },
+  lon: { type: Number },
 });
 
 const ContentLocational = mongoose.model(

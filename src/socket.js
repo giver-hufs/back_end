@@ -30,6 +30,8 @@ function initializeSocket(server) {
           content,
           hostName,
           phoneNumber,
+          lon,
+          lat,
         } = data;
         const newContent = new ContentLocational({
           roomId,
@@ -38,45 +40,46 @@ function initializeSocket(server) {
           contentName,
           hostName,
           phoneNumber,
+          lon,
+          lat,
         });
+        console.log(newContent);
         await newContent.save();
         io.to(universityCode).emit("new request", newContent);
       } catch (err) {
         console.error("Error occured:", err);
       }
-      socket.on("request approve", async (data) => {
-        try {
-          await ContentLocational.findOneAndUpdate(
-            { roomId: data.roomId },
-            data
-          );
-          io.to(data.universityCode).emit("request approved", data);
-        } catch (err) {
-          console.log(err);
-        }
-      });
-      socket.on("join room", async (data) => {
-        try {
-          socket.join(data.roomId);
-        } catch (err) {
-          console.log(err);
-        }
-      });
-      socket.on("send message", async (data) => {
-        const { roomId, message, senderId, senderName, createdTime } = data;
-        const newChat = new ChatIndivisual({
-          roomId,
-          message,
-          senderId,
-          senderName,
-          createdTime,
-        });
-        io.to(roomId).emit("sended message", newChat);
-      });
-      //   socket.on("mission completed", async(data) => {
-      //     const {}
-      //   })
     });
+    socket.on("request approve", async (rooms) => {
+      try {
+        await ContentLocational.findOneAndRemove({ roomId: data.roomId });
+        io.emit("request approved", rooms);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    socket.on("join room", async (data) => {
+      try {
+        socket.join(data.roomId);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    socket.on("send message", async (data) => {
+      const { roomId, message, senderId, senderName, createdTime } = data;
+      const newChat = new ChatIndivisual({
+        roomId,
+        message,
+        senderId,
+        senderName,
+        createdTime,
+      });
+      await newChat.save();
+      io.to(roomId).emit("sended message", newChat);
+    });
+    //   socket.on("mission completed", async(data) => {
+    //     const {}
+    //   })
   });
 }
 
